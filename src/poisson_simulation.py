@@ -28,6 +28,7 @@ def plot_poisson_pmf(lambda_param=8, max_l=20):
     plt.ylabel('概率 P(X=l)')
     plt.xticks(l_values)
     plt.grid(True, linestyle='--', alpha=0.6)
+    return pmf
 
 def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     """模拟多组抛硬币实验
