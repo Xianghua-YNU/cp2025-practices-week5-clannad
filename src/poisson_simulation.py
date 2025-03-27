@@ -8,12 +8,6 @@ def plot_poisson_pmf(lambda_param=8, max_l=20):
     参数:
         lambda_param (float): 泊松分布参数λ
         max_l (int): 最大的l值
-    """
-    # TODO: 实现泊松分布概率质量函数的计算和绘制
-    # 提示：
-    # 1. 使用np.arange生成l值序列
-    # 2. 使用给定公式计算PMF
-    # 3. 使用plt绘制图形并设置标签
         
     返回:
         ndarray: 泊松分布的PMF值
@@ -37,6 +31,7 @@ def plot_poisson_pmf(lambda_param=8, max_l=20):
     plt.show()
     
     return pmf_values  # 返回 PMF 值
+
 def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     """模拟多组抛硬币实验
     
@@ -52,13 +47,13 @@ def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     # 提示：
     # 1. 使用np.random.choice模拟硬币抛掷
     # 2. 统计每组实验中正面的次数
-      flips = np.random.choice([0, 1], size=(n_experiments, n_flips), p=[1-p_head, p_head])
+    flips = np.random.choice([0, 1], size=(n_experiments, n_flips), p=[1-p_head, p_head])
     
     # 统计每组实验中正面朝上的次数
     heads_count = np.sum(flips, axis=1)
     
     return heads_count
-   
+
 def compare_simulation_theory(n_experiments=10000, lambda_param=8):
     """比较实验结果与理论分布
     
