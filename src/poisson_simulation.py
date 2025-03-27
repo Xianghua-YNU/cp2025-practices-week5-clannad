@@ -14,19 +14,29 @@ def plot_poisson_pmf(lambda_param=8, max_l=20):
     # 1. 使用np.arange生成l值序列
     # 2. 使用给定公式计算PMF
     # 3. 使用plt绘制图形并设置标签
-    l_values = np.arange(max_l)
-    pmf = (lambda_param**l_values * np.exp(-lambda_param)) / factorial(l_values)
+        
+    返回:
+        ndarray: 泊松分布的PMF值
+    """
+    plt.figure()  # 创建新图形
     
-    plt.figure(figsize=(10, 6))
-    plt.plot(l_values, pmf, 'bo-', markersize=5, linewidth=2, 
-             label=f'泊松分布 (λ={lambda_param})')
-    plt.title('泊松分布概率质量函数')
-    plt.xlabel('事件发生次数 (l)')
-    plt.ylabel('概率 P(X=l)')
-    plt.grid(True, linestyle='--', alpha=0.6)
+    # 生成 l 值的序列（不包含 max_l）
+    l_values = np.arange(0, max_l)
+    
+    # 计算泊松分布 PMF
+    pmf_values = (lambda_param ** l_values * np.exp(-lambda_param)) / factorial(l_values)
+    
+    # 绘制 PMF 图形
+    plt.plot(l_values, pmf_values, 'bo-', label='Theoretical Distribution')
+    plt.title(f"Poisson Probability Mass Function (λ={lambda_param})")  # 修改标题
+    plt.xlabel("l")
+    plt.ylabel("P(X=l)")
+    plt.xticks(l_values)
+    plt.grid(True)
     plt.legend()
-    return pmf
-
+    plt.show()
+    
+    return pmf_values  # 返回 PMF 值
 def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     """模拟多组抛硬币实验
     
@@ -42,7 +52,12 @@ def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     # 提示：
     # 1. 使用np.random.choice模拟硬币抛掷
     # 2. 统计每组实验中正面的次数
-     return np.random.binomial(n=n_flips, p=p_head, size=n_experiments)
+      flips = np.random.choice([0, 1], size=(n_experiments, n_flips), p=[1-p_head, p_head])
+    
+    # 统计每组实验中正面朝上的次数
+    heads_count = np.sum(flips, axis=1)
+    
+    return heads_count
    
 def compare_simulation_theory(n_experiments=10000, lambda_param=8):
     """比较实验结果与理论分布
@@ -57,28 +72,30 @@ def compare_simulation_theory(n_experiments=10000, lambda_param=8):
     # 2. 计算理论分布
     # 3. 绘制直方图和理论曲线
     # 4. 计算并打印统计信息
-    # 进行实验模拟
-    results = simulate_coin_flips(n_experiments)
-    max_l = max(int(lambda_param * 2), np.max(results) + 1)
-    l_values = np.arange(max_l)
-    pmf = (lambda_param**l_values * np.exp(-lambda_param)) / factorial(l_values)
+    # 获取模拟的实验结果
+    heads_count = simulate_coin_flips(n_experiments=n_experiments, n_flips=100, p_head=0.08)
     
-    plt.figure(figsize=(12, 7))
-    plt.hist(results, bins=range(max_l+1), density=True, alpha=0.7,
-             label='实验结果', color='skyblue', edgecolor='white')
-    plt.plot(l_values, pmf, 'r-', linewidth=2, 
-             label=f'理论分布 (λ={lambda_param})')
+    # 计算实验中正面朝上的次数分布的直方图
+    plt.hist(heads_count, bins=20, density=True, alpha=0.6, color='g', label='Simulation Results')
     
-    plt.title(f'泊松分布数值模拟比较 (N={n_experiments})')
-    plt.xlabel('正面朝上次数')
-    plt.ylabel('频率/概率')
-    plt.grid(True, linestyle='--', alpha=0.3)
+    # 计算泊松分布的理论PMF
+    max_l = np.max(heads_count)
+    l_values = np.arange(0, max_l)
+    pmf_values = (lambda_param ** l_values * np.exp(-lambda_param)) / factorial(l_values)
+    
+    # 绘制理论泊松分布曲线
+    plt.plot(l_values, pmf_values, 'bo-', label=f'Theoretical Distribution,λ={lambda_param}')
+    
+    # 设置图形属性
+    plt.title(f'Poisson Distribution Comparison (N={n_experiments}, λ={lambda_param})')
+    plt.xlabel("Number of Heads")
+    plt.ylabel("Probability")
     plt.legend()
-    
-    # 计算并显示统计量
-    print("实验统计量:")
-    print(f"均值: {np.mean(results):.2f} (理论值: {lambda_param})")
-    print(f"方差: {np.var(results):.2f} (理论值: {lambda_param})")
+    plt.grid(True)
+
+    # 打印统计信息
+    print(f"实验均值: {np.mean(heads_count):.2f} (理论值: {lambda_param})")
+    print(f"实验方差: {np.var(heads_count):.2f} (理论值: {lambda_param})")
 
 if __name__ == "__main__":
     # 设置随机种子
