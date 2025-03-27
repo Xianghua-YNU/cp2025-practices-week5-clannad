@@ -58,7 +58,7 @@ def compare_simulation_theory(n_experiments=10000, lambda_param=8):
     # 3. 绘制直方图和理论曲线
     # 4. 计算并打印统计信息
     # 进行实验模拟
-     results = simulate_coin_flips(n_experiments)
+    results = simulate_coin_flips(n_experiments)
     max_l = max(int(lambda_param * 2), np.max(results) + 1)
     l_values = np.arange(max_l)
     pmf = (lambda_param**l_values * np.exp(-lambda_param)) / factorial(l_values)
