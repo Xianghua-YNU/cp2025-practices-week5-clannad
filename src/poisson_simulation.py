@@ -14,7 +14,7 @@ def plot_poisson_pmf(lambda_param=8, max_l=20):
     # 1. 使用np.arange生成l值序列
     # 2. 使用给定公式计算PMF
     # 3. 使用plt绘制图形并设置标签
-      # 生成l值序列
+    # 生成l值序列
     l_values = np.arange(0, max_l + 1)
     
     # 计算泊松分布概率质量函数
@@ -44,7 +44,7 @@ def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     # 提示：
     # 1. 使用np.random.choice模拟硬币抛掷
     # 2. 统计每组实验中正面的次数
-     # 使用二项分布模拟抛硬币实验更高效
+    # 使用二项分布模拟抛硬币实验更高效
     results = np.random.binomial(n=n_flips, p=p_head, size=n_experiments)
     return results
 
