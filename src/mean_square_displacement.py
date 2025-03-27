@@ -21,7 +21,15 @@ def random_walk_finals(num_steps=1000, num_walks=1000):
     # 1. 使用np.zeros初始化数组
     # 2. 使用np.random.choice生成随机步长
     # 3. 使用np.sum计算总位移
-    pass
+      # 初始化步长数组
+    steps_x = np.random.choice([-1, 1], size=(num_walks, num_steps))
+    steps_y = np.random.choice([-1, 1], size=(num_walks, num_steps))
+    
+    # 计算总位移
+    x_finals = np.sum(steps_x, axis=1)
+    y_finals = np.sum(steps_y, axis=1)
+    
+    return x_finals, y_finals
 
 
 def calculate_mean_square_displacement():
@@ -40,7 +48,16 @@ def calculate_mean_square_displacement():
     # 1. 使用random_walk_finals获取终点坐标
     # 2. 计算位移平方和
     # 3. 使用np.mean计算平均值
-    pass
+    steps = np.array([1000, 2000, 3000, 4000])
+    msd = np.zeros_like(steps, dtype=float)
+    
+    for i, num_steps in enumerate(steps):
+        x_finals, y_finals = random_walk_finals(num_steps=num_steps)
+        # 计算位移平方和
+        displacement_sq = x_finals**2 + y_finals**2
+        msd[i] = np.mean(displacement_sq)
+    
+    return steps, msd
 
 
 def analyze_step_dependence():
@@ -57,7 +74,12 @@ def analyze_step_dependence():
     # 1. 调用calculate_mean_square_displacement获取数据
     # 2. 使用最小二乘法拟合 msd = k * steps
     # 3. k = Σ(N·msd)/Σ(N²)
-    pass
+    steps, msd = calculate_mean_square_displacement()
+    
+    # 最小二乘拟合 msd = k * steps
+    k = np.sum(steps * msd) / np.sum(steps**2)
+    
+    return steps, msd, k
 
 
 if __name__ == "__main__":
@@ -67,4 +89,23 @@ if __name__ == "__main__":
     # 2. 绘制实验数据点和理论曲线
     # 3. 设置图形属性
     # 4. 打印数据分析结果
-    pass
+    # 获取数据和拟合结果
+    steps, msd, k = analyze_step_dependence()
+    
+    # 绘制实验数据点和理论曲线
+    plt.figure(figsize=(8, 6))
+    plt.scatter(steps, msd, label='Simulation Data', color='b')
+    plt.plot(steps, k * steps, 'r-', label=f'Fit: MSD = {k:.2f} * N')
+    
+    # 设置图形属性
+    plt.xlabel('Number of Steps (N)')
+    plt.ylabel('Mean Square Displacement (MSD)')
+    plt.title('Random Walk: MSD vs Number of Steps')
+    plt.legend()
+    plt.grid(True)
+    
+    # 打印数据分析结果
+    print(f"Fitted proportionality constant k = {k:.4f}")
+    print("Theoretical value for 2D random walk should be 1.0")
+    
+    plt.show()
